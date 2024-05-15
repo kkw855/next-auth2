@@ -18,6 +18,9 @@ const config = {
       },
     },
     extend: {
+      fontFamily: {
+        poppins: ['var(--poppins)'] // Google Poppins 폰트 추가
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
