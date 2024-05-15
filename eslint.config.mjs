@@ -50,5 +50,9 @@ export default tseslint.config(
         ...globals.browser,
       }
     },
+    rules: {
+      // 타입스크립트 타입을 정의할 때 type 키워드 사용, interface 키워드 사용하면 error
+      '@typescript-eslint/consistent-type-definitions': [ 'error', 'type' ]
+    }
   },
 )
