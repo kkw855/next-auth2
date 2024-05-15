@@ -49,3 +49,4 @@ npm install --save-dev eslint @eslint/js typescript typescript-eslint
 
 npm install --save-dev eslint-plugin-react eslint-plugin-react-hooks @next/eslint-plugin-next
 ```
+[How to use new "flat config" approach in Eslint?](https://github.com/vercel/next.js/discussions/49337)
