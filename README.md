@@ -1,11 +1,13 @@
 # Next Auth V5
 
 ## TODO
+- 타입스크립트 키워드 satisfies
 - tsconfig.json 설명 주석 추가하기
 - eslint.config.mjs 설명 주석 추가하기
 
 ## Getting Started
 
+### Node, NPM 설치
 - Node 20.12.2  
 - NPM 10.7.0
 
@@ -18,6 +20,11 @@ nvm use 20.12.2
 - Next.js 14.2.3 요구사항 Node.js 18.17 or later.  
 - React 18
 - TypeScript 5
+
+### 패키지 설치
+```bash
+npx shadcn-ui@latest init
+```
 
 ## Keep Dependencies Up-To-Date
 npm-check-updates 패키지 사용 
