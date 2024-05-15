@@ -50,8 +50,5 @@ export default tseslint.config(
         ...globals.browser,
       }
     },
-    rules: {
-      'react/jsx-sort-props': 'error'
-    }
   },
 )
