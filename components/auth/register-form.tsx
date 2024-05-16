@@ -91,6 +91,7 @@ const RegisterForm = () => {
               <FormControl>
                 <Input
                   {...field}
+                  autoComplete='off'
                   disabled={isPending}
                   type='password'
                   placeholder='******'
