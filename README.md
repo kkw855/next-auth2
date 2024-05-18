@@ -36,19 +36,26 @@ npm install react@latest react-dom@latest
 npm install --save-dev @types/react@latest @types/react-dom@latest
 npm install drizzle-orm @neondatabase/serverless
 npm install --save-dev drizzle-kit
+npm install @auth/drizzle-adapter
+
+npm install bcrypt
+npm install --save-dev @types/bcrypt
+
+npm install next-auth@beta
 ```
 
 ## Get Started
 .env 파일
 ```shell
 DATABASE_URL=<Neon 데이터 베이스 URL>
+AUTH_SECRET=<npx auth secret 명령으로 생성한 키 입력>
 ```
 
 ```bash
 npm install
 
-npm run db:generate   # 마이그레이션 파일 생성
-npm run db:migrate    # 마이그레이션 파일을 기반으로 Neon 데이터베이스 스키마 업데이트
+npm run index:generate   # 마이그레이션 파일 생성
+npm run index:migrate    # 마이그레이션 파일을 기반으로 Neon 데이터베이스 스키마 업데이트
 
 npm run dev           # 앱 실행  
 ```
