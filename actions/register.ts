@@ -1,7 +1,7 @@
 'use server'
 
 import { safeParseAsync } from 'valibot'
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcryptjs'
 
 import { Register } from '@/schemas'
 import type { ServerResponse } from '@/types/response'
