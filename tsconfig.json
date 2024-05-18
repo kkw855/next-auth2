@@ -1,13 +1,20 @@
 {
   "compilerOptions": {
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "noEmit": true,
-    "esModuleInterop": true,
+    // 실제 runtime 이 설정한 target 을 지원(구현)하지 않으면 런타임 에러가 발생하게 될 것이다.
+    // TypeScript 는 타입 검사와 js 파일로 변환만을 할 뿐이지 polyfill 같은 것은 알아서 해야만 한다.
+    // target 을 설정하면 자동으로 "lib": [] 배열에 ES6 에서 사용하는 API 도 포함
+    "target": "ES6",
+    // js 파일로 변환할 때 사용할 모듈 방식
     "module": "esnext",
     "moduleResolution": "bundler",
+    // strict mode family 옵션을 모두 활성화
+    // 향후 버전의 TypeScript 는 이 플래그에서 추가적인 엄격한 검사를 도입할 수 있어, TypeScript 를 업그레이드하면 프로그램에 새로운 타입 오류가 발생할 수도 있습니다.
+    "strict": true,
+    // "include": [] 에 .js 와 .jsx 파일을 추가
+    "allowJs": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "esModuleInterop": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
@@ -18,9 +25,26 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
-    }
+      "@/*": [
+        "./*"
+      ]
+    },
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  // tsconfig.json 파일 위치의 상대 경로
+  // "allowJs": true 라면 .js와 .jsx 도 포함
+  "include": [
+    "next-env.d.ts",
+    ".next/types/**/*.ts",
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  // tsconfig.json 파일 위치의 상대 경로
+  "exclude": [
+    "node_modules"
+  ]
 }
