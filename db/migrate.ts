@@ -1,7 +1,7 @@
 import { migrate } from 'drizzle-orm/neon-http/migrator'
 
 import '@/envConfig'
-import db from '@/lib/db'
+import db from '@/db/db'
 
 const program = async () => {
   try {
