@@ -1,6 +1,12 @@
-import { pgTable, primaryKey, text, timestamp, integer } from 'drizzle-orm/pg-core'
+import { pgTable, primaryKey, text, timestamp, integer, pgEnum } from 'drizzle-orm/pg-core'
 import type { AdapterAccountType } from '@auth/core/adapters'
 import { createId } from '@paralleldrive/cuid2'
+
+export const userRoles = pgEnum('userRole', [
+  'ADMIN',
+  'USER'
+])
+export type UserRole = typeof userRoles.enumValues[number]
 
 export const users = pgTable('user', {
   id: text('id')
@@ -12,7 +18,8 @@ export const users = pgTable('user', {
     .notNull(),
   emailVerified: timestamp('emailVerified', { mode: 'date' }),
   image: text('image'),
-  password: text('password').notNull() // Auth.js 에 없는 커스텀 필드 추가
+  password: text('password').notNull(),                     // Auth.js 에 없는 커스텀 필드 추가
+  role: userRoles('role').default('USER').notNull()   // Auth.js 에 없는 커스텀 필드 추가
 })
 export type User = typeof users.$inferSelect
 
@@ -37,5 +44,25 @@ export const accounts = pgTable(
     compoundKey: primaryKey({
       columns: [account.provider, account.providerAccountId],
     }),
+  })
+)
+
+export const sessions = pgTable('session', {
+  sessionToken: text('sessionToken').primaryKey(),
+  userId: text('userId')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  expires: timestamp('expires', { mode: 'date' }).notNull(),
+})
+
+export const verificationTokens = pgTable(
+  'verificationToken',
+  {
+    identifier: text('identifier').notNull(),
+    token: text('token').notNull(),
+    expires: timestamp('expires', { mode: 'date' }).notNull(),
+  },
+  (vt) => ({
+    compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
   })
 )

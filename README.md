@@ -49,13 +49,21 @@ npm install next-auth@beta
 ```shell
 DATABASE_URL=<Neon 데이터 베이스 URL>
 AUTH_SECRET=<npx auth secret 명령으로 생성한 키 입력>
+
+# https://github.com/settings/developers 에서 Auth App 등록하고 얻은 값을 입력
+GITHUB_ID=
+GITHUB_SECRET=
+
+#
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
 ```
 
 ```bash
 npm install
 
-npm run index:generate   # 마이그레이션 파일 생성
-npm run index:migrate    # 마이그레이션 파일을 기반으로 Neon 데이터베이스 스키마 업데이트
+npm run db:generate   # 마이그레이션 파일 생성
+npm run db:migrate    # 마이그레이션 파일을 기반으로 Neon 데이터베이스 스키마 업데이트
 
 npm run dev           # 앱 실행  
 ```
@@ -91,3 +99,4 @@ npm install --save-dev eslint-plugin-react eslint-plugin-react-hooks @next/eslin
 
 [Next 런타임 환경이 아닌 소스 파일에서도 환경변수 사용 가능하게 만들기](https://nextjs.org/docs/app/building-your-application/configuring/environment-variables)
 [Drizzle 로 생성한 스키마를 Neon 에 적용하기](https://neon.tech/docs/guides/drizzle-migrations)
+[Auth.js 리다이렉트 사용할 때 Error: NEXT_REDIRECT](https://github.com/nextauthjs/next-auth/discussions/9389#discussioncomment-9477692)

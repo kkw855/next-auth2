@@ -38,7 +38,7 @@ export default tseslint.config(
         tsconfigRootDir: import.meta.dirname,
         plugins: {
           '@next/next': {
-            rules: next.configs["core-web-vitals"].rules,
+            rules: next.configs['core-web-vitals'].rules,
             configs: next.configs,
           }
         },
@@ -51,8 +51,11 @@ export default tseslint.config(
       }
     },
     rules: {
+      // React 만 사용할 때 유용. Next.js Server 작업을 고려하지는 않음.
+      '@typescript-eslint/no-misused-promises': 'off',
+
       // 타입스크립트 타입을 정의할 때 type 키워드 사용, interface 키워드 사용하면 error
-      '@typescript-eslint/consistent-type-definitions': [ 'error', 'type' ]
+      '@typescript-eslint/consistent-type-definitions': [ 'error', 'type' ],
     }
   },
 )
