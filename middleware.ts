@@ -19,6 +19,7 @@ export default auth((req) => {
 
   // 로그 아웃 상태일 때만 로그인, 계정 생성 페이지에 접근 가능
   if (isAuthRoute) {
+    // 로그인 상태에서 로그인, 계정 생성 페이지 접근하면 default 페이지로 이동
     return isLogged
       ? Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl)) // 함수에 두 번째 파라미터를 전달해서 상대 경로가 아닌 절대 경로 URL 생성
       : NextResponse.next()
