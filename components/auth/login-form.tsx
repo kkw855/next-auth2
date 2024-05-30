@@ -1,8 +1,10 @@
 'use client'
 
+import { type SignInPageErrorParam } from '@auth/core/types'
 import { useState, useTransition } from 'react'
-import { type SubmitHandler, useForm } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
+import { type SubmitHandler, useForm } from 'react-hook-form'
 import { valibotResolver } from '@hookform/resolvers/valibot'
 import {
   Form,
@@ -15,19 +17,23 @@ import {
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 
-import { Login } from '@/schemas'
-import { login } from '@/actions/login'
 import { DEFAULT_LOGIN_REDIRECT } from '@/routes'
+import { login } from '@/actions/login'
+import { Login } from '@/schemas'
 import CardWrapper from '@/components/auth/card-wrapper'
 import FormError from '@/components/form-error'
 import FormSuccess from '@/components/form-success'
 
 const LoginForm = () => {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const urlError = searchParams.get('error') as SignInPageErrorParam === 'OAuthAccountNotLinked'
+    ? 'Email already in use with different provider!'
+    : ''
+
   const [ isPending, startTransition ] = useTransition()
   const [ error, setError ] = useState<string | undefined>(undefined)
   const [ success, setSuccess ] = useState<string | undefined>(undefined)
-
-  const router = useRouter()
 
   const form = useForm<Login>({
     resolver: valibotResolver(Login),
@@ -106,7 +112,7 @@ const LoginForm = () => {
             </FormItem>
           )}
           />
-          <FormError message={error} />
+          <FormError message={error ?? urlError} />
           <FormSuccess message={success} />
           <Button
             disabled={isPending}

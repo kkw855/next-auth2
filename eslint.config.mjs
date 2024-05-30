@@ -54,8 +54,8 @@ export default tseslint.config(
       // React 만 사용할 때 유용. Next.js Server 작업을 고려하지는 않음.
       '@typescript-eslint/no-misused-promises': 'off',
 
-      // 타입스크립트 타입을 정의할 때 type 키워드 사용, interface 키워드 사용하면 error
-      '@typescript-eslint/consistent-type-definitions': [ 'error', 'type' ],
+      // 타입스크립트 타입을 정의할 때 type or interface 키워드 중 하나만 사용하게 설정
+      '@typescript-eslint/consistent-type-definitions': 'off',
     }
   },
 )

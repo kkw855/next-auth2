@@ -18,7 +18,8 @@ export const users = pgTable('user', {
     .notNull(),
   emailVerified: timestamp('emailVerified', { mode: 'date' }),
   image: text('image'),
-  password: text('password').notNull(),                     // Auth.js 에 없는 커스텀 필드 추가
+  // not null 로 설정하면 OAuth(Google, Github ...) 기능 동작 안함
+  password: text('password'),                               // Auth.js 에 없는 커스텀 필드 추가
   role: userRoles('role').default('USER').notNull()   // Auth.js 에 없는 커스텀 필드 추가
 })
 export type User = typeof users.$inferSelect
@@ -28,7 +29,7 @@ export const accounts = pgTable(
   {
     userId: text('userId')
       .notNull()
-      .references(() => users.id, { onDelete: 'cascade' }),
+      .references(() => users.id, { onDelete: 'cascade' }), // 관련 user 삭제되면 같이 삭제
     type: text('type').$type<AdapterAccountType>().notNull(),
     provider: text('provider').notNull(),
     providerAccountId: text('providerAccountId').notNull(),

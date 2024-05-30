@@ -1,14 +1,18 @@
 # Next Auth V5
 
 ## TODO
-- 타입스크립트 키워드 satisfies
+- PlayWrite 로 테스트 케이스 작성
+- Next 14 App Router 다국어 적용하기
+- valibot 에러 메시지에 다국어 적용하기
+- WebStorm -> Intellij 사용으로 변경하기
+- ~~타입스크립트 키워드 satisfies~~
 - tsconfig.json 설명 주석 추가하기
 - eslint.config.mjs 설명 주석 추가하기
 
 ## Requirements & Setup History
 
 ### Node, NPM 설치
-- Node 20.12.2  
+- Node 20.12.2
 - NPM 10.7.0
 
 ```bash
@@ -45,16 +49,15 @@ npm install next-auth@beta
 ```
 
 ## Get Started
+[GitHub, Google Client ID, secret 생성 방법](https://youtu.be/1MTyCvS05V4?si=BIS2j_AhBhJPraFx&t=12144)  
 .env 파일
 ```shell
 DATABASE_URL=<Neon 데이터 베이스 URL>
 AUTH_SECRET=<npx auth secret 명령으로 생성한 키 입력>
 
-# https://github.com/settings/developers 에서 Auth App 등록하고 얻은 값을 입력
 GITHUB_ID=
 GITHUB_SECRET=
 
-#
 GOOGLE_CLIENT_ID=
 GOOGLE_CLIENT_SECRET=
 ```
@@ -97,6 +100,7 @@ npm install --save-dev eslint-plugin-react eslint-plugin-react-hooks @next/eslin
 ## Etc
 [크롬 확장 프로그램 localhost 에서 실행 못 하게 설정](https://m.blog.naver.com/toruin84/223163171025)
 
+[ESLint: 'className' is missing in props validation(react/prop-types)](https://github.com/jsx-eslint/eslint-plugin-react/issues/3284#issuecomment-2021754931)
 [Next 런타임 환경이 아닌 소스 파일에서도 환경변수 사용 가능하게 만들기](https://nextjs.org/docs/app/building-your-application/configuring/environment-variables)
 [Drizzle 로 생성한 스키마를 Neon 에 적용하기](https://neon.tech/docs/guides/drizzle-migrations)
 [Auth.js 리다이렉트 사용할 때 Error: NEXT_REDIRECT](https://github.com/nextauthjs/next-auth/discussions/9389#discussioncomment-9477692)
