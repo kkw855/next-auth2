@@ -2,10 +2,8 @@ import type { FC, ReactNode } from 'react'
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
 } from '@/components/ui/card'
 
 import Header from '@/components/auth/header'
