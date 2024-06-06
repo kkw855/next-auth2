@@ -4,13 +4,15 @@ import { safeParseAsync } from 'valibot'
 import bcrypt from 'bcryptjs'
 
 import { Register } from '@/schemas'
-import type { ServerResponse } from '@/types/response'
+import type { ServerResponse } from '@/types'
 import { users } from '@/db/schema'
 import db from '@/db/db'
 import { getUserByEmail } from '@/db/user'
+import { findVerificationTokenByEmail } from '@/db/verificationToken'
+import { generateVerificationToken } from '@/lib/token'
+import {sendVerificationEmail} from "@/lib/email";
 
-// Server Action
-// 비동기 함수로 만들어야 함, 오직 HTTP POST method 만 사용
+// Next Server Action: 비동기 함수로 만들어야 함, 오직 HTTP POST method 만 사용
 export const register = async (values: Register): Promise<ServerResponse> => {
   const validateFields = await safeParseAsync(Register, values)
 
@@ -33,7 +35,8 @@ export const register = async (values: Register): Promise<ServerResponse> => {
     password: hashedPassword,
   })
 
-  // TODO: 인증 토큰 이메일 보내기
-
-  return { _tag: 'success', message: 'User created!' }
+  // 토큰 생성해서 DB 저장
+  const verificationToken = await generateVerificationToken(email)
+  await sendVerificationEmail(verificationToken.email, verificationToken.token)
+  return { _tag: 'success', message: 'Confirmation email sent!' }
 }

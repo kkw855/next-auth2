@@ -1,6 +1,6 @@
-// noinspection ES6UnusedImports
+/* eslint-disable @typescript-eslint/no-unused-vars */
+// noinspection ES6UnusedImports,JSUnusedGlobalSymbols
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { type JWT } from "next-auth/jwt"
 import NextAuth, { type DefaultSession } from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
@@ -13,7 +13,7 @@ import bcrypt from 'bcryptjs'
 import { Config, Effect } from 'effect'
 
 import db from '@/db/db'
-import { users, accounts, sessions, verificationTokens, type UserRole } from '@/db/schema'
+import { users, accounts, sessions, type UserRole } from '@/db/schema'
 import { getUserByEmail, getUserById } from '@/db/user'
 import { Login } from '@/schemas'
 
@@ -22,19 +22,7 @@ const googleSecret = Effect.runSync(Config.string('GOOGLE_CLIENT_SECRET'))
 const gitHubClientId = Effect.runSync(Config.string('GITHUB_ID'))
 const githubSecret = Effect.runSync(Config.string('GITHUB_SECRET'))
 
-declare global {
-  interface User {
-    id: string
-    name: string
-    email: string
-    image: string | null
-  }
-  interface AdapterUser {
-    id: string
-    name: string
-  }
-}
-
+// TODO: 타입스크립트 Augmentation User. 검색하면 아직 잘 지원 안되는 듯
 declare module 'next-auth' {
   interface AdapterUser {
     id: string
@@ -53,19 +41,20 @@ declare module 'next-auth/jwt' {
 }
 
 // Auth.js 는 Database, JWT 두 가지 세션 전략을 지원한다. 디폴트는 Database.
-// credential workflow: authorize -> callback signIn
+// Credential workflow: authorize -> callback signIn
 // OAuth workflow: callback signIn -> linkAccount -> jwt -> session ->
 export const { auth, handlers, signIn, signOut } = NextAuth({
   adapter: DrizzleAdapter(db, {
     usersTable: users,                              // 내가 만든 커스텀 테이블을 대신 사용
     accountsTable: accounts,                        // 내가 만든 커스텀 테이블을 대신 사용
     sessionsTable: sessions,                        // Only Database Session 을 사용할 때 필요한 테이블
-    verificationTokensTable: verificationTokens,    // Only Magic Link 프로바이더를 사용할 때 필요한 테이블
+    // verificationTokensTable: verificationTokens,    // Only Magic Link 프로바이더를 사용할 때 필요한 테이블
   }),
   session: { strategy: 'jwt' }, // Auth.js 가 JWT 세션 전략을 사용하도록 변경한다.
   providers: [
     // Credentials Provider 는 Auth.js 가 JWT 세션 전략을 사용할 때만 사용 가능하다. Database 전략으로 사용 불가능.
     Credentials({
+      name: 'credentials',
       authorize: async (credentials/*, req 요청 객체*/) => {
         console.log('Credentials authorize()')
         const validatedFields = safeParse(Login, credentials)
@@ -107,18 +96,23 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     }
   },
   callbacks: {
-    async signIn({ user }) {
+    // Credentials authorize 함수 이후에 호출
+    async signIn({ user, account }) {
       console.log('callback signIn()', { user })
-      // const existingUser = await getUserById(user.id)
-      //
-      // if (!existingUser?.emailVerified) return false
 
-      return true
+      // OAuth 는 이메일 인증 없이 로그인 허용
+      if (account?.provider !== 'credentials') return true
+
+      const existingUser = await getUserById(user.id ?? '')
+
+      // TODO: Add 2FA check
+
+      return !!existingUser?.emailVerified;
     },
 
     async jwt({ token, user }){
       if (!token.sub) return token
-      
+
       const existingUser = await getUserById(token.sub)
 
       if (!existingUser) return token
@@ -131,7 +125,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     // jwt 콜백 함수 호출 이후에 session 함수가 호출된다.
     async session({ session, token }) {
       if (token.sub) session.user.id = token.sub
-      
+
       session.user.role = token.role
 
       console.log('callback session()', { session, token })

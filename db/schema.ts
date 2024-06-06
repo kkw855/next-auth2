@@ -1,4 +1,4 @@
-import { pgTable, primaryKey, text, timestamp, integer, pgEnum } from 'drizzle-orm/pg-core'
+import { pgTable, primaryKey, text, timestamp, integer, pgEnum, unique } from 'drizzle-orm/pg-core'
 import type { AdapterAccountType } from '@auth/core/adapters'
 import { createId } from '@paralleldrive/cuid2'
 
@@ -14,7 +14,7 @@ export const users = pgTable('user', {
     .$defaultFn(() => createId()),
   name: text('name').notNull(),
   email: text('email')
-    .unique()
+    .unique()   // 같은 이메일의 OAuth 로그인 못 함
     .notNull(),
   emailVerified: timestamp('emailVerified', { mode: 'date' }),
   image: text('image'),
@@ -49,7 +49,7 @@ export const accounts = pgTable(
 )
 
 export const sessions = pgTable('session', {
-  sessionToken: text('sessionToken').primaryKey(),
+  sessionToken: text('sessionToken').primaryKey().$defaultFn(() => createId()),
   userId: text('userId')
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
@@ -59,11 +59,14 @@ export const sessions = pgTable('session', {
 export const verificationTokens = pgTable(
   'verificationToken',
   {
-    identifier: text('identifier').notNull(),
-    token: text('token').notNull(),
+    id: text('id').primaryKey().$defaultFn(() => createId()),
+    email: text('email').notNull(),
+    token: text('token').unique().notNull(),
     expires: timestamp('expires', { mode: 'date' }).notNull(),
   },
   (vt) => ({
-    compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
+    unq: unique('custom_name').on(vt.email, vt.token),
   })
 )
+export type VerificationTokenInsert = typeof verificationTokens.$inferInsert
+export type VerificationToken = typeof verificationTokens.$inferSelect
