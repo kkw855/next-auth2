@@ -36,10 +36,13 @@ const RegisterForm = () => {
       // 이 내부에 존재하는 모든 상태 변경이 완료되면 isPending 을 false 로 변환
       // 이 내부에 state 업데이트 중 다른 곳에서 동일한 state 를 set 함수를 호출해서 업데이트하면 여기에 state 업데이트는 중단되고
       // 다른 곳에서 호출한 state 데이터로 업데이트 하고 관련 UI 들을 다시 렌더링 한다.
-      void register(values)
+      register(values)
         .then((res) => {
           if (res._tag === 'success') setSuccess(res.message)
           else setError(res.message)
+        })
+        .catch((err: unknown) => {
+          console.error(err)
         })
     })
   }
