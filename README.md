@@ -1,6 +1,14 @@
 # Next Auth V5
 
+## Features
+- 👥 User Roles
+- 🔑 Credentials 이메일, 비밀번호
+- 🌐 OAuth Google, GitHub
+
 ## TODO
+- 단순 string 이 아닌 email 타입(etc Brand 데이터 타입) 사용하기 
+- Date 대신 dayjs 사용하기
+- Network First. DB 접속 안될 때 에러 처리하기
 - PlayWrite 로 테스트 케이스 작성
 - Next 14 App Router 다국어 적용하기
 - valibot 에러 메시지에 다국어 적용하기
@@ -8,6 +16,8 @@
 - ~~타입스크립트 키워드 satisfies~~
 - tsconfig.json 설명 주석 추가하기
 - eslint.config.mjs 설명 주석 추가하기
+- Production 배포하기
+- 두 개 이상의 Production 인스턴스 & nginx
 
 ## Requirements & Setup History
 
@@ -21,10 +31,10 @@ nvm install 20.12.2
 nvm use 20.12.2
 ```
 
-- TypeScript 5
-- React 18
-- Next.js 14.2.3 요구사항 Node.js 18.17 or later.
-- Prisma 5.14.0 요구사항 Node.js v16.13.0 or higher
+- TypeScript v5
+- React v18
+- Next.js v14.2.3 요구사항 Node.js v18.17 or later.
+- Prisma v5.14.0 요구사항 Node.js v16.13.0 or higher
 
 ### 패키지 설치
 ```bash
@@ -49,11 +59,19 @@ npm install next-auth@beta
 ```
 
 ## Get Started
-[GitHub, Google Client ID, secret 생성 방법](https://youtu.be/1MTyCvS05V4?si=BIS2j_AhBhJPraFx&t=12144)  
+- [Neon Database 생성 방법](https://youtu.be/1MTyCvS05V4?si=i_ySKrYdUkT6PndY&t=6285)  
+- [GitHub, Google Client ID, secret 생성 방법](https://youtu.be/1MTyCvS05V4?si=BIS2j_AhBhJPraFx&t=12144)  
+- [이메일 발송 기능을 위해서 resend.com 계정 생성 및 설정 방법](https://youtu.be/1MTyCvS05V4?si=11wSLdQjc_7Mj_3x&t=14919)
+
 .env 파일
 ```shell
+# Neon Postgresql URL
 DATABASE_URL=<Neon 데이터 베이스 URL>
+
+# Auth.js 가 토큰 해싱, 이메일 인증 해싱을 하는데 사용한다.
 AUTH_SECRET=<npx auth secret 명령으로 생성한 키 입력>
+
+RESEND_API_KEY=
 
 GITHUB_ID=
 GITHUB_SECRET=
@@ -62,6 +80,7 @@ GOOGLE_CLIENT_ID=
 GOOGLE_CLIENT_SECRET=
 ```
 
+실행하기
 ```bash
 npm install
 
