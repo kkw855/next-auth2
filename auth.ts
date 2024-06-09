@@ -56,7 +56,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     Credentials({
       name: 'credentials',
       authorize: async (credentials/*, req 요청 객체*/) => {
-        console.log('Credentials authorize()')
+        console.log('credentials authorize()', credentials)
         const validatedFields = safeParse(Login, credentials)
 
         if (!validatedFields.success) return null

@@ -117,8 +117,7 @@ npm install --save-dev eslint-plugin-react eslint-plugin-react-hooks @next/eslin
 [How to use new "flat config" approach in Eslint?](https://github.com/vercel/next.js/discussions/49337)
 
 ## Etc
-[크롬 확장 프로그램 localhost 에서 실행 못 하게 설정](https://m.blog.naver.com/toruin84/223163171025)
-
+[개발환경에서 리액트 컴포넌트가 두 번 렌더링되는 이유](https://youtu.be/1MTyCvS05V4?si=4kCo6jAu-mqvYP5e&t=16260)
 [ESLint: 'className' is missing in props validation(react/prop-types)](https://github.com/jsx-eslint/eslint-plugin-react/issues/3284#issuecomment-2021754931)
 [Next 런타임 환경이 아닌 소스 파일에서도 환경변수 사용 가능하게 만들기](https://nextjs.org/docs/app/building-your-application/configuring/environment-variables)
 [Drizzle 로 생성한 스키마를 Neon 에 적용하기](https://neon.tech/docs/guides/drizzle-migrations)
