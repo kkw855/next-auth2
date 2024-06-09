@@ -3,16 +3,17 @@
  */
 export const publicRoutes: string[] = [
   '/',
-  '/temp'
+  '/auth/new-verification',
+  '/temp',
 ]
 
 /**
- * 로그인 상태면 Redirect 가 필요한 페이지 리스트
+ * 로그인 상태에서 접근금지 리스트
  */
 export const authRoutes: string[] = [
   '/auth/login',
   '/auth/register',
-  '/auth/error'
+  '/auth/error',
 ]
 
 /**
