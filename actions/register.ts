@@ -7,8 +7,7 @@ import { Register } from '@/schemas'
 import type { ServerResponse } from '@/types'
 import { users } from '@/db/schema'
 import db from '@/db/db'
-import { getUserByEmail } from '@/db/user'
-import { findVerificationTokenByEmail } from '@/db/verificationToken'
+import { findUserByEmail } from '@/db/user'
 import { generateVerificationToken } from '@/lib/token'
 import {sendVerificationEmail} from "@/lib/email";
 
@@ -22,7 +21,7 @@ export const register = async (values: Register): Promise<ServerResponse> => {
   const { name, email, password } = validateFields.output
 
   // Email 중복 체크
-  const existingUser = await getUserByEmail(email)
+  const existingUser = await findUserByEmail(email)
 
   if (existingUser) return { _tag: 'error', message: 'Email already in use!' }
 

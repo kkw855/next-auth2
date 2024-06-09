@@ -14,7 +14,7 @@ import { Config, Effect } from 'effect'
 
 import db from '@/db/db'
 import { users, accounts, sessions, type UserRole } from '@/db/schema'
-import { getUserByEmail, getUserById } from '@/db/user'
+import { findUserByEmail, findUserById } from '@/db/user'
 import { Login } from '@/schemas'
 
 const googleClientId = Effect.runSync(Config.string('GOOGLE_CLIENT_ID'))
@@ -63,7 +63,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
         const { email, password } = validatedFields.output
 
-        const user = await getUserByEmail(email)
+        const user = await findUserByEmail(email)
 
         // 가입하지 않은 사용자, 패스워드가 없는 사용자
         if (!user?.password) return null
@@ -98,12 +98,12 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   callbacks: {
     // Credentials authorize 함수 이후에 호출
     async signIn({ user, account }) {
-      console.log('callback signIn()', { user })
+      console.log('callback signIn()', { user, account })
 
       // OAuth 는 이메일 인증 없이 로그인 허용
       if (account?.provider !== 'credentials') return true
 
-      const existingUser = await getUserById(user.id ?? '')
+      const existingUser = await findUserById(user.id ?? '')
 
       // TODO: Add 2FA check
 
@@ -113,7 +113,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     async jwt({ token, user }){
       if (!token.sub) return token
 
-      const existingUser = await getUserById(token.sub)
+      const existingUser = await findUserById(token.sub)
 
       if (!existingUser) return token
 

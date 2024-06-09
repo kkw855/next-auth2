@@ -6,8 +6,7 @@ import { safeParseAsync } from 'valibot'
 import { Login } from '@/schemas'
 
 import { signIn } from '@/auth'
-import { getUserByEmail } from '@/db/user'
-import { findVerificationTokenByEmail } from '@/db/verificationToken'
+import { findUserByEmail } from '@/db/user'
 import { generateVerificationToken } from '@/lib/token'
 import {sendVerificationEmail} from "@/lib/email";
 
@@ -19,7 +18,7 @@ export const login = async (values: Login) => {
 
   const { email, password } = validateFields.output
 
-  const existingUser = await getUserByEmail(email)
+  const existingUser = await findUserByEmail(email)
 
   // 가입된 사용자가 아니거나 OAuth 로 가입한 사용자(OAuth 는 비밀번호 null)
   if (!existingUser?.password) return { _tag: 'error', message: 'Email does not exist!' }
