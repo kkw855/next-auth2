@@ -2,12 +2,29 @@
   "name": "next-auth",
   "version": "0.1.0",
   "private": true,
+  "lint-staged": {
+    "*.{css}": [
+      "prettier --write",
+      "prettier --check"
+    ],
+    "*.{ts,tsx}": [
+      "prettier --write",
+      "prettier --check",
+      "eslint --fix",
+      "eslint --max-warnings 0"
+    ]
+  },
   "scripts": {
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx ./db/migrate.ts",
     "dev": "next dev -p 5544",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "lint": "eslint app components lib --max-warnings 0",
+    "lint:fix": "eslint app components lib --fix",
+    "format": "prettier --check app components lib",
+    "format:fix": "prettier --write app components lib",
+    "prepare": "husky"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.1.0",
@@ -44,9 +61,14 @@
     "@types/react-dom": "^18.3.0",
     "drizzle-kit": "^0.21.2",
     "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-react": "^7.34.1",
     "eslint-plugin-react-hooks": "^4.6.2",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.7",
     "postcss": "^8",
+    "prettier": "^3.3.2",
+    "prettier-plugin-tailwindcss": "^0.6.5",
     "tailwindcss": "^3.4.3",
     "tsx": "^4.10.3",
     "typescript": "^5.4.5",

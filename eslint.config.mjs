@@ -7,7 +7,7 @@ import reactRecommended from 'eslint-plugin-react/configs/recommended.js'
 import jsxRuntime from 'eslint-plugin-react/configs/jsx-runtime.js'
 import reactHooks from 'eslint-plugin-react-hooks'
 import next from '@next/eslint-plugin-next'
-import globals from 'globals'
+import eslintConfigPrettier from 'eslint-config-prettier'
 
 export default tseslint.config(
   eslint.configs.recommended,
@@ -46,9 +46,6 @@ export default tseslint.config(
           jsx: true,
         },
       },
-      globals: {
-        ...globals.browser,
-      }
     },
     rules: {
       // React 만 사용할 때 유용. Next.js Server 작업을 고려하지는 않음.
@@ -57,5 +54,10 @@ export default tseslint.config(
       // 타입스크립트 타입을 정의할 때 type or interface 키워드 중 하나만 사용하게 설정
       '@typescript-eslint/consistent-type-definitions': 'off',
     }
+  },
+  eslintConfigPrettier,
+  {
+    // ESLint 에서 제외할 리스트
+    ignores: ['tailwind.config.ts'],
   },
 )
