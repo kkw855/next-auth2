@@ -1,13 +1,13 @@
 'use client'
 
-import { useCallback, useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation"
-import { BeatLoader } from "react-spinners"
+import { useCallback, useEffect, useState } from 'react'
+import { useSearchParams } from 'next/navigation'
+import { BeatLoader } from 'react-spinners'
 
-import { newVerification } from "@/actions/new-verification";
-import CardWrapper from "@/components/auth/card-wrapper"
+import { newVerification } from '@/actions/new-verification'
+import CardWrapper from '@/components/auth/card-wrapper'
 import FormError from '@/components/form-error'
-import FormSuccess from "@/components/form-success";
+import FormSuccess from '@/components/form-success'
 
 const NewVerificationForm = () => {
   const [error, setError] = useState<string | undefined>()
@@ -23,16 +23,14 @@ const NewVerificationForm = () => {
     }
 
     if (!token) {
-      setError('Missing token!');
+      setError('Missing token!')
       return
     }
 
     newVerification(token)
       .then((res) => {
         const { _tag, message } = res
-        _tag === 'success'
-          ? setSuccess(message)
-          : setError(message)
+        _tag === 'success' ? setSuccess(message) : setError(message)
       })
       .catch(() => {
         setError('Something went wrong!')
@@ -45,14 +43,13 @@ const NewVerificationForm = () => {
 
   return (
     <CardWrapper
-      headerLabel='Confirming your verification'
-      backButtonLabel='Back to login'
-      backButtonHref='/auth/login'
+      headerLabel="Confirming your verification"
+      backButtonLabel="Back to login"
+      backButtonHref="/auth/login"
     >
-      <div className='flex justify-center items-center'>
-        {!success && !error &&
-          <BeatLoader />
-        }
+      <div className="flex items-center justify-center">
+        {!success && !error && <BeatLoader />}
+        {/* TODO: 서버 응답(ServerResponse) success, error 하나의 컴포넌트로 처리 가능? */}
         <FormSuccess message={success} />
         <FormError message={error} />
       </div>

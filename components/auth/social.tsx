@@ -11,29 +11,31 @@ import { Button } from '@/components/ui/button'
 import { DEFAULT_LOGIN_REDIRECT } from '@/routes'
 
 const Social = () => {
-  const onClick = async (provider: Extract<OAuthProviderType, 'google' | 'github'>) => {
+  const onClick = async (
+    provider: Extract<OAuthProviderType, 'google' | 'github'>,
+  ) => {
     await signIn(provider, {
-      callbackUrl: DEFAULT_LOGIN_REDIRECT
+      callbackUrl: DEFAULT_LOGIN_REDIRECT,
     })
   }
-  
+
   return (
-    <div className='flex w-full gap-x-2'>
+    <div className="flex w-full gap-x-2">
       <Button
-        size='lg'
-        variant='outline'
-        className='w-full'
+        size="lg"
+        variant="outline"
+        className="w-full"
         onClick={() => onClick('google')}
       >
-        <FcGoogle className='h-5 w-5' />
+        <FcGoogle className="h-5 w-5" />
       </Button>
       <Button
-        size='lg'
-        variant='outline'
-        className='w-full'
+        size="lg"
+        variant="outline"
+        className="w-full"
         onClick={() => onClick('github')}
       >
-        <FaGithub className='h-5 w-5' />
+        <FaGithub className="h-5 w-5" />
       </Button>
     </div>
   )

@@ -21,7 +21,7 @@ export const LoginButton = ({ children, mode }: LoginButton) => {
   }
 
   return (
-    <span className='inline-block' onClick={onClick}>
+    <span className="inline-block" onClick={onClick}>
       {children}
     </span>
   )

@@ -5,4 +5,4 @@ const TempPage = () => {
   return <ErrorCard />
 }
 
-export default TempPage;
+export default TempPage

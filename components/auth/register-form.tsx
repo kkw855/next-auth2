@@ -3,7 +3,14 @@
 import { useState, useTransition } from 'react'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 import { valibotResolver } from '@hookform/resolvers/valibot'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 
@@ -14,9 +21,9 @@ import FormError from '@/components/form-error'
 import FormSuccess from '@/components/form-success'
 
 const RegisterForm = () => {
-  const [ isPending, startTransition ] = useTransition()
-  const [ error, setError ] = useState<string | undefined>(undefined)
-  const [ success, setSuccess ] = useState<string | undefined>(undefined)
+  const [isPending, startTransition] = useTransition()
+  const [error, setError] = useState<string | undefined>(undefined)
+  const [success, setSuccess] = useState<string | undefined>(undefined)
 
   const form = useForm<Register>({
     resolver: valibotResolver(Register),
@@ -24,7 +31,7 @@ const RegisterForm = () => {
       name: '',
       email: '',
       password: '',
-    }
+    },
   })
   const { control, handleSubmit } = form
   const onSubmit: SubmitHandler<Register> = (values: Register) => {
@@ -49,68 +56,73 @@ const RegisterForm = () => {
 
   return (
     <CardWrapper
-      headerLabel='Create an account'
+      headerLabel="Create an account"
       backButtonLabel="Already have an account?"
-      backButtonHref='/auth/login'
+      backButtonHref="/auth/login"
       showSocial
     >
       <Form {...form}>
         <form
           onSubmit={(...args) => void handleSubmit(onSubmit)(...args)}
-          className='space-y-4'
+          className="space-y-4"
         >
-          <FormField name='name' control={control} render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input
-                  {...field}
-                  disabled={isPending}
-                  placeholder='John Doe'
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-          />
-          <FormField name='email' control={control} render={({ field }) => (
+          <FormField
+            name="name"
+            control={control}
+            render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel>Name</FormLabel>
                 <FormControl>
                   <Input
                     {...field}
                     disabled={isPending}
-                    type='email'
-                    placeholder='john.doe@example.com'
+                    placeholder="John Doe"
                   />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <FormField name='password' control={control} render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <Input
-                  {...field}
-                  autoComplete='off'
-                  disabled={isPending}
-                  type='password'
-                  placeholder='******'
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          <FormField
+            name="email"
+            control={control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    disabled={isPending}
+                    type="email"
+                    placeholder="john.doe@example.com"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            name="password"
+            control={control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    autoComplete="off"
+                    disabled={isPending}
+                    type="password"
+                    placeholder="******"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
           <FormError message={error} />
           <FormSuccess message={success} />
-          <Button
-            disabled={isPending}
-            type='submit'
-            className='w-full'
-          >
+          <Button disabled={isPending} type="submit" className="w-full">
             Create an account
           </Button>
         </form>

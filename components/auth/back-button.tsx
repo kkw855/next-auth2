@@ -7,20 +7,10 @@ type Prop = Readonly<{
   href: string
 }>
 
-const BackButton: FC<Prop> = ({
-  href,
-  label
-}) => {
+const BackButton: FC<Prop> = ({ href, label }) => {
   return (
-    <Button
-      variant='link'
-      className='font-normal'
-      size='sm'
-      asChild
-    >
-      <Link href={href}>
-        {label}
-      </Link>
+    <Button variant="link" className="font-normal" size="sm" asChild>
+      <Link href={href}>{label}</Link>
     </Button>
   )
 }

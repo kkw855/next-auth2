@@ -27,20 +27,22 @@ import FormSuccess from '@/components/form-success'
 const LoginForm = () => {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const urlError = searchParams.get('error') as SignInPageErrorParam === 'OAuthAccountNotLinked'
-    ? 'Email already in use with different provider!'
-    : ''
+  const urlError =
+    (searchParams.get('error') as SignInPageErrorParam) ===
+    'OAuthAccountNotLinked'
+      ? 'Email already in use with different provider!'
+      : ''
 
-  const [ isPending, startTransition ] = useTransition()
-  const [ error, setError ] = useState<string | undefined>(undefined)
-  const [ success, setSuccess ] = useState<string | undefined>(undefined)
+  const [isPending, startTransition] = useTransition()
+  const [error, setError] = useState<string | undefined>(undefined)
+  const [success, setSuccess] = useState<string | undefined>(undefined)
 
   const form = useForm<Login>({
     resolver: valibotResolver(Login),
     defaultValues: {
       email: '',
       password: '',
-    }
+    },
   })
   const { control, handleSubmit } = form
   const onSubmit: SubmitHandler<Login> = (values: Login) => {
@@ -56,7 +58,10 @@ const LoginForm = () => {
       login(values)
         .then((res) => {
           // 로그인 실패
-          if (res._tag === 'error') { setError(res.message); return }
+          if (res._tag === 'error') {
+            setError(res.message)
+            return
+          }
 
           // 로그인 성공
           setSuccess(res.message)
@@ -71,54 +76,56 @@ const LoginForm = () => {
 
   return (
     <CardWrapper
-      headerLabel='Welcome back'
+      headerLabel="Welcome back"
       backButtonLabel="Don't have an account?"
-      backButtonHref='/auth/register'
+      backButtonHref="/auth/register"
       showSocial
     >
       <Form {...form}>
         <form
           onSubmit={(...args) => void handleSubmit(onSubmit)(...args)}
-          className='space-y-4'
+          className="space-y-4"
         >
-          <FormField name='email' control={control} render={({ field }) => (
+          <FormField
+            name="email"
+            control={control}
+            render={({ field }) => (
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
                   <Input
                     {...field}
                     disabled={isPending}
-                    type='email'
-                    placeholder='john.doe@example.com'
+                    type="email"
+                    placeholder="john.doe@example.com"
                   />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <FormField name='password' control={control} render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <Input
-                  {...field}
-                  autoComplete='off'
-                  disabled={isPending}
-                  type='password'
-                  placeholder='******'
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          <FormField
+            name="password"
+            control={control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    autoComplete="off"
+                    disabled={isPending}
+                    type="password"
+                    placeholder="******"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
           <FormError message={error ?? urlError} />
           <FormSuccess message={success} />
-          <Button
-            disabled={isPending}
-            type='submit'
-            className='w-full'
-          >
+          <Button disabled={isPending} type="submit" className="w-full">
             Login
           </Button>
         </form>
