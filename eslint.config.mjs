@@ -13,7 +13,17 @@ export default tseslint.config(
   eslint.configs.recommended,
   ...tseslint.configs.strictTypeChecked,
   ...tseslint.configs.stylisticTypeChecked,
-  reactRecommended,
+  {
+    ...reactRecommended,
+    settings: {
+      react: {
+        version: 'detect'
+      }
+    },
+    languageOptions: {
+      ...reactRecommended.languageOptions
+    }
+  },
   jsxRuntime,
   {
     plugins: {
