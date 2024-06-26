@@ -77,9 +77,6 @@ importers:
       tailwindcss-animate:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@3.4.4)
-      valibot:
-        specifier: ^0.30.0
-        version: 0.30.0
     devDependencies:
       '@eslint/js':
         specifier: ^9.2.0
@@ -141,6 +138,9 @@ importers:
       typescript-eslint:
         specifier: ^7.13.1
         version: 7.13.1(eslint@8.57.0)(typescript@5.5.2)
+      valibot:
+        specifier: ^0.33.3
+        version: 0.33.3
 
 packages:
 
@@ -2624,8 +2624,8 @@ packages:
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
 
-  valibot@0.30.0:
-    resolution: {integrity: sha512-5POBdbSkM+3nvJ6ZlyQHsggisfRtyT4tVTo1EIIShs6qCdXJnyWU5TJ68vr8iTg5zpOLjXLRiBqNx+9zwZz/rA==}
+  valibot@0.33.3:
+    resolution: {integrity: sha512-/fuY1DlX8uiQ7aphlzrrI2DbG0YJk84JMgvz2qKpUIdXRNsS53varfo4voPjSrjUr5BSV2K0miSEJUOlA5fQFg==}
 
   which-boxed-primitive@1.0.2:
     resolution: {integrity: sha512-bwZdv0AKLpplFY2KZRX6TvyuN7ojjr7lwkg6ml0roIy9YeuSr7JS372qlNW18UQYzgYK9ziGcerWqZOmEn9VNg==}
@@ -5086,7 +5086,7 @@ snapshots:
 
   util-deprecate@1.0.2: {}
 
-  valibot@0.30.0: {}
+  valibot@0.33.3: {}
 
   which-boxed-primitive@1.0.2:
     dependencies:

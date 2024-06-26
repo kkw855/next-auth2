@@ -1,19 +1,18 @@
 /**
  * 인증이 필요없는 public 페이지 리스트
  */
-export const publicRoutes: string[] = [
-  '/',
-  '/auth/new-verification',
-  '/temp',
-]
+export const publicRoutes: string[] = ['/', '/auth/new-verification']
 
 /**
- * 로그인 상태에서 접근금지 리스트
+ * 로그인 상태면 Default 페이지로 이동
+ * 비로그인 상태면 해당 페이지로 이동
  */
 export const authRoutes: string[] = [
   '/auth/login',
   '/auth/register',
   '/auth/error',
+  '/auth/reset',
+  '/auth/new-password',
 ]
 
 /**
