@@ -8,7 +8,6 @@ import GoogleProvider from 'next-auth/providers/google'
 import GitHubProvider from 'next-auth/providers/github'
 import { DrizzleAdapter } from '@auth/drizzle-adapter'
 import { eq } from 'drizzle-orm'
-import { safeParse } from 'valibot'
 import bcrypt from 'bcryptjs'
 import { Config, Effect } from 'effect'
 
@@ -64,11 +63,11 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       name: 'credentials',
       authorize: async (credentials /*, req 요청 객체*/) => {
         console.log('credentials authorize()', credentials)
-        const validatedFields = safeParse(Login, credentials)
+        const validatedFields = Login.safeParse(Login, credentials)
 
         if (!validatedFields.success) return null
 
-        const { email, password } = validatedFields.output
+        const { email, password } = validatedFields.data
 
         const user = await findUserByEmail(email)
 

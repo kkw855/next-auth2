@@ -1,41 +1,34 @@
-import * as v from 'valibot'
+import * as z from 'zod'
 
 // TODO: 다른 사이트에서 참조해서 더 적절한 메시지로 문구 수정하기, 그리고 메시지에 다국어 적용하기
 
-export const NewPassword = v.object({
-  password: v.pipe(
-    v.string(),
-    v.minLength(6, 'Minimum 6 characters is required'),
-  ),
+export const NewPassword = z.object({
+  password: z.string().min(1, {
+    message: 'Minimum 6 characters is required',
+  }),
 })
-export type NewPassword = v.InferOutput<typeof NewPassword>
+export type NewPassword = z.infer<typeof NewPassword>
 
-export const Reset = v.object({
-  email: v.pipe(
-    v.string(),
-    v.minLength(1, 'Email is required'),
-    v.email('Invalid Email'),
-  ),
+export const Reset = z.object({
+  email: z.string().email({
+    message: 'Email is required',
+  }),
 })
-export type Reset = v.InferOutput<typeof Reset>
+export type Reset = z.infer<typeof Reset>
 
-export const Login = v.object({
-  email: v.pipe(
-    v.string(),
-    v.minLength(1, 'Email is required'),
-    v.email('Invalid Email'),
-  ),
-  password: v.pipe(v.string(), v.minLength(1, 'Password is required')),
+export const Login = z.object({
+  email: z.string().email({
+    message: 'Email is required',
+  }),
+  password: z.string({ message: 'Password is required' }),
 })
-export type Login = v.InferOutput<typeof Login>
+export type Login = z.infer<typeof Login>
 
-export const Register = v.object({
-  email: v.pipe(
-    v.string(),
-    v.minLength(1, 'Email is required'),
-    v.email('Invalid Email'),
-  ),
-  password: v.pipe(v.string(), v.minLength(6, 'Minimum 6 characters required')),
-  name: v.pipe(v.string(), v.minLength(1, 'Name is required')),
+export const Register = z.object({
+  email: z.string().email({
+    message: 'Email is required',
+  }),
+  password: z.string({ message: 'Password is required' }),
+  name: z.string({ message: 'Name is required' }),
 })
-export type Register = v.InferOutput<typeof Register>
+export type Register = z.infer<typeof Register>

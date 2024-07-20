@@ -1,20 +1,19 @@
 'use server'
 
+import type { ServerResponse } from '@/types'
 import { Reset } from '@/schemas'
-import { safeParseAsync } from 'valibot'
-import { ServerResponse } from '@/types'
 import { findUserByEmail } from '@/db/user'
 import { generatePasswordResetToken } from '@/lib/token'
 import { sendPasswordResetEmail } from '@/lib/email'
 
 export const reset = async (values: Reset): Promise<ServerResponse> => {
-  const validateFields = await safeParseAsync(Reset, values)
+  const validateFields = await Reset.safeParseAsync(values)
 
   if (!validateFields.success) {
     return { _tag: 'error', message: 'Invalid email!' }
   }
 
-  const { email } = validateFields.output
+  const { email } = validateFields.data
   const existingUser = await findUserByEmail(email)
 
   if (!existingUser) {

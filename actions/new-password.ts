@@ -1,26 +1,26 @@
 'use server'
 
-import { NewPassword } from '@/schemas'
-import { ServerResponse } from '@/types'
-import { safeParseAsync } from 'valibot'
-import { findPasswordResetTokenByToken } from '@/db/passwordResetToken'
-import { findUserByEmail } from '@/db/user'
-import bcrypt from 'bcryptjs'
-import { passwordResetTokens, users } from '@/db/schema'
 import { eq } from 'drizzle-orm'
+import bcrypt from 'bcryptjs'
+
+import type { ServerResponse } from '@/types'
+import { passwordResetTokens, users } from '@/db/schema'
 import db from '@/db/db'
+import { findUserByEmail } from '@/db/user'
+import { findPasswordResetTokenByToken } from '@/db/passwordResetToken'
+import { NewPassword } from '@/schemas'
 
 export const newPassword = async (
   values: NewPassword,
   token: string,
 ): Promise<ServerResponse> => {
-  const validateFields = await safeParseAsync(NewPassword, values)
+  const validateFields = await NewPassword.safeParseAsync(values)
 
   if (!validateFields.success) {
     return { _tag: 'error', message: 'Invalid fields!' }
   }
 
-  const { password } = validateFields.output
+  const { password } = validateFields.data
 
   const existingToken = await findPasswordResetTokenByToken(token)
 

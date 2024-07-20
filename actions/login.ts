@@ -1,23 +1,21 @@
 'use server'
 
 import { AuthError } from 'next-auth'
-import { safeParseAsync } from 'valibot'
-
-import { Login } from '@/schemas'
 
 import { signIn } from '@/auth'
 import { findUserByEmail } from '@/db/user'
+import { Login } from '@/schemas'
 import { generateVerificationToken } from '@/lib/token'
 import { sendVerificationEmail } from '@/lib/email'
 
 // Server Action: 비동기 함수로 만들어야 함, only HTTP POST method 만 사용
 export const login = async (values: Login) => {
-  const validateFields = await safeParseAsync(Login, values)
+  const validateFields = await Login.safeParseAsync(values)
 
   if (!validateFields.success)
     return { _tag: 'error', message: 'Invalid fields! ' }
 
-  const { email, password } = validateFields.output
+  const { email, password } = validateFields.data
 
   const existingUser = await findUserByEmail(email)
 
