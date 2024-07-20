@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // noinspection ES6UnusedImports,JSUnusedGlobalSymbols
 
-import { type JWT } from "next-auth/jwt"
+import { type JWT } from 'next-auth/jwt'
 import NextAuth, { type DefaultSession } from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
 import GoogleProvider from 'next-auth/providers/google'
@@ -13,9 +13,16 @@ import bcrypt from 'bcryptjs'
 import { Config, Effect } from 'effect'
 
 import db from '@/db/db'
-import { users, accounts, sessions, type UserRole } from '@/db/schema'
+import {
+  users,
+  accounts,
+  sessions,
+  type UserRole,
+  twoFactorConfirmations,
+} from '@/db/schema'
 import { findUserByEmail, findUserById } from '@/db/user'
 import { Login } from '@/schemas'
+import { findTwoFactorConfirmationByUserId } from '@/db/two-factor-confirmation'
 
 const googleClientId = Effect.runSync(Config.string('GOOGLE_CLIENT_ID'))
 const googleSecret = Effect.runSync(Config.string('GOOGLE_CLIENT_SECRET'))
@@ -45,9 +52,9 @@ declare module 'next-auth/jwt' {
 // OAuth workflow: callback signIn -> linkAccount -> jwt -> session ->
 export const { auth, handlers, signIn, signOut } = NextAuth({
   adapter: DrizzleAdapter(db, {
-    usersTable: users,                              // 내가 만든 커스텀 테이블을 대신 사용
-    accountsTable: accounts,                        // 내가 만든 커스텀 테이블을 대신 사용
-    sessionsTable: sessions,                        // Only Database Session 을 사용할 때 필요한 테이블
+    usersTable: users, // 내가 만든 커스텀 테이블을 대신 사용
+    accountsTable: accounts, // 내가 만든 커스텀 테이블을 대신 사용
+    sessionsTable: sessions, // Only Database Session 을 사용할 때 필요한 테이블
     // verificationTokensTable: verificationTokens,    // Only Magic Link 프로바이더를 사용할 때 필요한 테이블
   }),
   session: { strategy: 'jwt' }, // Auth.js 가 JWT 세션 전략을 사용하도록 변경한다.
@@ -55,7 +62,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     // Credentials Provider 는 Auth.js 가 JWT 세션 전략을 사용할 때만 사용 가능하다. Database 전략으로 사용 불가능.
     Credentials({
       name: 'credentials',
-      authorize: async (credentials/*, req 요청 객체*/) => {
+      authorize: async (credentials /*, req 요청 객체*/) => {
         console.log('credentials authorize()', credentials)
         const validatedFields = safeParse(Login, credentials)
 
@@ -71,7 +78,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         const passwordMatch = await bcrypt.compare(password, user.password)
 
         return passwordMatch ? user : null
-      }
+      },
     }),
     GoogleProvider({
       clientId: googleClientId,
@@ -80,20 +87,23 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     GitHubProvider({
       clientId: gitHubClientId,
       clientSecret: githubSecret,
-    })
+    }),
   ],
   pages: {
     signIn: '/auth/login',
-    error: '/auth/error'        // OAuth 로그인 에러 발생했을 때 이동할 페이지(etc 이메일 중복)
+    error: '/auth/error', // OAuth 로그인 에러 발생했을 때 이동할 페이지(etc 이메일 중복)
   },
   events: {
     async linkAccount({ user }) {
       console.log('events linkAccount()', user)
-      await db.update(users).set({
-        emailVerified: new Date()
-        // TODO: module augment user.id
-      }).where(eq(users.id, user.id ?? ''))
-    }
+      await db
+        .update(users)
+        .set({
+          emailVerified: new Date(),
+          // TODO: module augment user.id
+        })
+        .where(eq(users.id, user.id ?? ''))
+    },
   },
   callbacks: {
     // Credentials authorize 함수 이후에 호출
@@ -105,12 +115,28 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
       const existingUser = await findUserById(user.id ?? '')
 
-      // TODO: Add 2FA check
+      if (!existingUser?.emailVerified) return false
 
-      return !!existingUser?.emailVerified;
+      // 2FA check
+      if (existingUser.isTwoFactorEnabled) {
+        const twoFactorConfirmation = await findTwoFactorConfirmationByUserId(
+          existingUser.id,
+        )
+
+        console.log(twoFactorConfirmation)
+
+        if (!twoFactorConfirmation) return false
+
+        // Delete two-factor confirmation for next sign-in
+        await db
+          .delete(twoFactorConfirmations)
+          .where(eq(twoFactorConfirmations.id, twoFactorConfirmation.id))
+      }
+
+      return true
     },
 
-    async jwt({ token, user }){
+    async jwt({ token, user }) {
       if (!token.sub) return token
 
       const existingUser = await findUserById(token.sub)
@@ -123,13 +149,13 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       return token
     },
     // jwt 콜백 함수 호출 이후에 session 함수가 호출된다.
-    async session({ session, token }) {
+    session({ session, token }) {
       if (token.sub) session.user.id = token.sub
 
       session.user.role = token.role
 
       console.log('callback session()', { session, token })
       return session
-    }
-  }
+    },
+  },
 })

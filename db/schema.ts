@@ -6,6 +6,7 @@ import {
   integer,
   pgEnum,
   unique,
+  boolean,
 } from 'drizzle-orm/pg-core'
 import type { AdapterAccountType } from '@auth/core/adapters'
 import { createId } from '@paralleldrive/cuid2'
@@ -26,6 +27,8 @@ export const users = pgTable('user', {
   // not null 로 설정하면 OAuth(Google, Github ...) 기능 동작 안함
   password: text('password'), // Auth.js 에 없는 커스텀 필드 추가
   role: userRoles('role').default('USER').notNull(), // Auth.js 에 없는 커스텀 필드 추가
+  isTwoFactorEnabled: boolean('isTwoFactorEnabled').default(false),
+  // twoFactorConfirmation:
 })
 export type User = typeof users.$inferSelect
 
@@ -96,3 +99,33 @@ export const passwordResetTokens = pgTable(
 )
 export type PasswordResetTokenInsert = typeof passwordResetTokens.$inferInsert
 export type PasswordResetToken = typeof passwordResetTokens.$inferSelect
+
+export const twoFactorTokens = pgTable(
+  'twoFactorTokens',
+  {
+    id: text('id')
+      .primaryKey()
+      .$defaultFn(() => createId()),
+    email: text('email').notNull(),
+    token: text('token').unique().notNull(),
+    expires: timestamp('expires', { mode: 'date' }).notNull(),
+  },
+  (tft) => ({
+    unq: unique('tft_unique').on(tft.email, tft.token),
+  }),
+)
+export type TwoFactorTokenInsert = typeof twoFactorTokens.$inferInsert
+export type TwoFactorToken = typeof twoFactorTokens.$inferSelect
+
+export const twoFactorConfirmations = pgTable('twoFactorConfirmation', {
+  id: text('id')
+    .primaryKey()
+    .$defaultFn(() => createId()),
+  userId: text('userId')
+    .notNull()
+    .unique()
+    .references(() => users.id, { onDelete: 'cascade' }),
+})
+export type TwoFactorConfirmationsInsert =
+  typeof twoFactorConfirmations.$inferInsert
+export type TwoFactorConfirmations = typeof twoFactorConfirmations.$inferSelect
