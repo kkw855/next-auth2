@@ -1,4 +1,3 @@
-/* eslint-disable */
 // noinspection JSCheckFunctionSignatures
 
 import eslint from '@eslint/js'
@@ -10,6 +9,11 @@ import next from '@next/eslint-plugin-next'
 import eslintConfigPrettier from 'eslint-config-prettier'
 
 export default tseslint.config(
+  {
+    linterOptions: {
+      reportUnusedDisableDirectives: 'error',
+    },
+  },
   eslint.configs.recommended,
   ...tseslint.configs.strictTypeChecked,
   ...tseslint.configs.stylisticTypeChecked,
@@ -17,12 +21,12 @@ export default tseslint.config(
     ...reactRecommended,
     settings: {
       react: {
-        version: 'detect'
-      }
+        version: 'detect',
+      },
     },
     languageOptions: {
-      ...reactRecommended.languageOptions
-    }
+      ...reactRecommended.languageOptions,
+    },
   },
   jsxRuntime,
   {
@@ -38,6 +42,8 @@ export default tseslint.config(
     rules: {
       ...next.configs.recommended.rules,
       ...next.configs['core-web-vitals'].rules,
+      // TypeError: context.getAncestors is not a function
+      '@next/next/no-duplicate-head': 'off',
     },
   },
   {
@@ -50,7 +56,7 @@ export default tseslint.config(
           '@next/next': {
             rules: next.configs['core-web-vitals'].rules,
             configs: next.configs,
-          }
+          },
         },
         ecmaFeatures: {
           jsx: true,
@@ -63,11 +69,11 @@ export default tseslint.config(
 
       // 타입스크립트 타입을 정의할 때 type or interface 키워드 중 하나만 사용하게 설정
       '@typescript-eslint/consistent-type-definitions': 'off',
-    }
+    },
   },
   eslintConfigPrettier,
   {
     // ESLint 에서 제외할 리스트
-    ignores: ['tailwind.config.ts'],
+    ignores: ['.next', '*.mjs', 'vite.config.ts', 'tailwind.config.ts'],
   },
 )
